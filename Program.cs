@@ -34,6 +34,8 @@ builder.Services.AddScoped<JwtToken>();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddLocalization();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

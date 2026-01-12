@@ -7,7 +7,7 @@ namespace AmIAuthorised.DataAccessLayer.Database
     {
         public AmIAuthorisedContext(DbContextOptions options) : base(options) { }
 
-        DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
 
     }
 }
