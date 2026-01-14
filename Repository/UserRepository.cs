@@ -22,5 +22,21 @@ namespace AmIAuthorised.Repository
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<Role?> GetRoleByName(string roleName)
+        {
+            return await _context.Roles.Where(r => r.RoleName == roleName).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateRole(Role role)
+        {
+            _context.Roles.Add(role);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Role?> GetRoleById(int roleId)
+        {
+            return await _context.Roles.Where(r => r.RoleId == roleId).FirstOrDefaultAsync();
+        }
     }
 }

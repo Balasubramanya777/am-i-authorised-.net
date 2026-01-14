@@ -45,9 +45,12 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!)),
+        //ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        //ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!)),
+        ValidIssuer = "balasubramanya",
+        ValidAudience = "wholeworldglobe",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("balasubramanyaauthorisemebalasubramanya")),
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
