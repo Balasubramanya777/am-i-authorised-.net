@@ -1,4 +1,5 @@
 ﻿using AmIAuthorised.DataAccessLayer.DTO;
+using AmIAuthorised.DataAccessLayer.Entity;
 using AmIAuthorised.Service;
 using AmIAuthorised.Utility;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AmIAuthorised.Controllers
 {
     [ApiController]
-    [Route("api/users")]
+    [Route("api/")]
     [Authorize]
     public class UserController : ControllerBase
     {
@@ -18,7 +19,7 @@ namespace AmIAuthorised.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("user")]
         public async Task<IActionResult> CreateUser(SignUpRequest userDto)
         {
             var response = await _userService.CreateUser(userDto);
@@ -30,6 +31,13 @@ namespace AmIAuthorised.Controllers
         public async Task<IActionResult> Authenticate(SignInRequest signInReq)
         {
             var response = await _userService.Authenticate(signInReq);
+            return response.ToActionResult();
+        }
+
+        [HttpPost("role")]
+        public async Task<IActionResult> CreateRole(Role role)
+        {
+            var response = await _userService.CreateRole(role);
             return response.ToActionResult();
         }
     }

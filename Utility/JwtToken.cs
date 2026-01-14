@@ -16,13 +16,16 @@ namespace AmIAuthorised.Utility
         public string GenerateJWT(string userId, string email)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Key"]!);
+            //var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Key"]!);
+            var key = Encoding.ASCII.GetBytes("balasubramanyaauthorisemebalasubramanya");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(GetClaims(userId, email)),
-                Issuer = _configuration["JwtSettings:Issuer"],
-                Audience = _configuration["JwtSettings:Audience"],
-                Expires = DateTime.UtcNow.AddSeconds(30000),
+                //Issuer = _configuration["JwtSettings:Issuer"],
+                //Audience = _configuration["JwtSettings:Audience"],
+                Issuer = "balasubramanya",
+                Audience = "wholeworldglobe",
+                Expires = DateTime.UtcNow.AddSeconds(3600),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
