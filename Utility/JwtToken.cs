@@ -1,6 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
+using AmIAuthorised.DataAccessLayer.DTO;
 using Microsoft.IdentityModel.Tokens;
 
 namespace AmIAuthorised.Utility
@@ -13,14 +15,14 @@ namespace AmIAuthorised.Utility
         {
             _configuration = configuration;
         }
-        public string GenerateJWT(string userId, string email)
+        public string GenerateJWT(UserDTO userDto)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             //var key = Encoding.ASCII.GetBytes(_configuration["JwtSettings:Key"]!);
             var key = Encoding.ASCII.GetBytes("balasubramanyaauthorisemebalasubramanya");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(GetClaims(userId, email)),
+                Subject = new ClaimsIdentity(GetClaims(userDto)),
                 //Issuer = _configuration["JwtSettings:Issuer"],
                 //Audience = _configuration["JwtSettings:Audience"],
                 Issuer = "balasubramanya",
@@ -33,13 +35,20 @@ namespace AmIAuthorised.Utility
             return tokenHandler.WriteToken(token);
         }
 
-        private static IEnumerable<Claim> GetClaims(string userId, string email)
+        private static List<Claim> GetClaims(UserDTO userDto)
         {
-            return
-            [
-                new(JwtRegisteredClaimNames.Sub, userId),
-                new(JwtRegisteredClaimNames.Email, email)
-            ];
+            List<Claim> claims = new()
+            {
+                new(JwtRegisteredClaimNames.Sub, userDto.UserId.ToString()),
+                new(JwtRegisteredClaimNames.Email, userDto.Email)
+            };
+
+            foreach (var permission in userDto.Permissions)
+            {
+                claims.Add(new Claim("permissions", permission));
+            }
+
+            return claims;
         }
     }
 }

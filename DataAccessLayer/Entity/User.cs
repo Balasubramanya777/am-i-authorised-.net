@@ -10,6 +10,9 @@ namespace AmIAuthorised.DataAccessLayer.Entity
         [Column("user_id")]
         public long UserId { get; set; }
 
+        [Column("role_id")]
+        public int RoleId { get; set; }
+
         [Required]
         [MaxLength(25)]
         [Column("user_name")]
@@ -33,5 +36,9 @@ namespace AmIAuthorised.DataAccessLayer.Entity
         [Required]
         [Column("password")]
         public string Password { get; set; } = string.Empty;
+
+
+        [ForeignKey(nameof(RoleId))]
+        public virtual Role? Role { get; set; }
     }
 }

@@ -15,10 +15,7 @@ namespace AmIAuthorised.DataAccessLayer.Entity
         public int PermissionId { get; set; }
 
 
-        //[ForeignKey(nameof(RoleId))]
         public Role? Role { get; set; }
-
-        //[ForeignKey(nameof(PermissionId))]
         public Permission? Permission { get; set; }
     }
 }
