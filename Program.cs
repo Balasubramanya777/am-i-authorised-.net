@@ -58,6 +58,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("USER_CREATE", policy => policy.RequireClaim("permissions", "USER_CREATE"));
+    options.AddPolicy("USER_VIEW_ALL", policy => policy.RequireClaim("permissions", "USER_VIEW_ALL"));
+    options.AddPolicy("ROLE_VIEW_ALL", policy => policy.RequireClaim("permissions", "ROLE_VIEW_ALL"));
+
+    options.AddPolicy("APPLICATION_VIEW", policy => policy.RequireClaim("permissions", "APPLICATION_VIEW"));
+    options.AddPolicy("APPLICATION_VIEW_ALL", policy => policy.RequireClaim("permissions", "APPLICATION_VIEW_ALL"));
+    options.AddPolicy("APPLICATION_CREATE", policy => policy.RequireClaim("permissions", "APPLICATION_CREATE"));
+    options.AddPolicy("APPLICATION_EDIT", policy => policy.RequireClaim("permissions", "APPLICATION_EDIT"));
+    options.AddPolicy("APPLICATION_SUBMIT", policy => policy.RequireClaim("permissions", "APPLICATION_SUBMIT"));
+    options.AddPolicy("APPLICATION_ACTION", policy => policy.RequireClaim("permissions", "APPLICATION_ACTION"));
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
