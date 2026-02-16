@@ -19,7 +19,7 @@ namespace AmIAuthorised.Service
         public async Task<ApiResponse<bool>> CreateApplication(string applicationName)
         {
             if (string.IsNullOrWhiteSpace(applicationName))
-                return new ApiResponse<bool>(false, false, "ApplicationNameis required", HttpStatusCode.BadRequest);
+                return new ApiResponse<bool>(false, false, "Application name is required", HttpStatusCode.BadRequest);
 
             Application application = new()
             {
@@ -36,7 +36,7 @@ namespace AmIAuthorised.Service
         {
             Application? application = await _applicationRepository.GetApplicationById(applicationId);
             if (application == null)
-                return new ApiResponse<string>(string.Empty, false, "InvalidRequest", HttpStatusCode.BadRequest);
+                return new ApiResponse<string>(string.Empty, false, "Invalid request", HttpStatusCode.BadRequest);
 
             application.ApplicationName = newName;
             await _applicationRepository.UpdateApplication(application);
@@ -47,7 +47,7 @@ namespace AmIAuthorised.Service
         {
             Application? application = await _applicationRepository.GetApplicationById(applicationId);
             if (application == null)
-                return new ApiResponse<Application>(null, false, "InvalidRequest", HttpStatusCode.BadRequest);
+                return new ApiResponse<Application>(null, false, "Invalid request", HttpStatusCode.BadRequest);
 
             return new ApiResponse<Application>(application, true, "Success", HttpStatusCode.OK);
         }
@@ -61,7 +61,7 @@ namespace AmIAuthorised.Service
         {
             Application? application = await _applicationRepository.GetApplicationById(applicationId);
             if (application == null)
-                return new ApiResponse<string>(string.Empty, false, "InvalidRequest", HttpStatusCode.BadRequest);
+                return new ApiResponse<string>(string.Empty, false, "Invalid request", HttpStatusCode.BadRequest);
 
             application.ApplicationStatus = status;
             await _applicationRepository.UpdateApplication(application);
@@ -76,7 +76,7 @@ namespace AmIAuthorised.Service
         public async Task<ApiResponse<string>> ApplicationStatusAction(long applicationId, int status)
         {
             if (status != (int)ApplicationStatus.Approved && status != (int)ApplicationStatus.Rejected)
-                return new ApiResponse<string>(string.Empty, false, "InvalidRequest", HttpStatusCode.BadRequest);
+                return new ApiResponse<string>(string.Empty, false, "Invalid request", HttpStatusCode.BadRequest);
 
             return await UpdateApplicationStatus(applicationId, status);
         }

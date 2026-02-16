@@ -20,11 +20,11 @@ namespace AmIAuthorised.Service
         {
             UserDTO? userDto = await _userRepository.GetUserByUserName(signInReq.UserName);
             if (userDto == null)
-                return new ApiResponse<SignInResponse>(null, false, "AuthSignInInvalid", HttpStatusCode.BadRequest);
+                return new ApiResponse<SignInResponse>(null, false, "Invalid sign in", HttpStatusCode.BadRequest);
 
             string? token = AuthenticateHelper(signInReq, userDto);
             if (string.IsNullOrEmpty(token))
-                return new ApiResponse<SignInResponse>(null, false, "AuthSignInInvalid", HttpStatusCode.BadRequest);
+                return new ApiResponse<SignInResponse>(null, false, "Invalid sign in", HttpStatusCode.BadRequest);
 
             SignInResponse response = new()
             {
@@ -35,7 +35,7 @@ namespace AmIAuthorised.Service
                 LastName = userDto.LastName
             };
 
-            return new ApiResponse<SignInResponse>(response, true, "AuthSignInSuccess", HttpStatusCode.OK);
+            return new ApiResponse<SignInResponse>(response, true, "Sign in success", HttpStatusCode.OK);
         }
 
         private string? AuthenticateHelper(SignInRequest signInReq, UserDTO userDto)
@@ -50,15 +50,15 @@ namespace AmIAuthorised.Service
         {
             if (string.IsNullOrWhiteSpace(signUpRequest.UserName) || string.IsNullOrWhiteSpace(signUpRequest.FirstName) || string.IsNullOrWhiteSpace(signUpRequest.LastName)
                  || string.IsNullOrWhiteSpace(signUpRequest.Email) || string.IsNullOrWhiteSpace(signUpRequest.Password) || signUpRequest.RoleId <= default(int))
-                return new ApiResponse<bool>(false, false, "AuthSignInInvalid", HttpStatusCode.BadRequest);
+                return new ApiResponse<bool>(false, false, "Invalid sign in", HttpStatusCode.BadRequest);
 
             UserDTO? isUserExist = await _userRepository.GetUserByUserName(signUpRequest.UserName);
             if (isUserExist != null)
-                return new ApiResponse<bool>(false, false, "ErrorAlreadyExistsWith", HttpStatusCode.Conflict);
+                return new ApiResponse<bool>(false, false, "Already exists", HttpStatusCode.Conflict);
 
             Role? isRoleExist = await _userRepository.GetRoleById(signUpRequest.RoleId);
             if (isRoleExist == null)
-                return new ApiResponse<bool>(false, false, "ErrorRoleNotFound", HttpStatusCode.BadRequest);
+                return new ApiResponse<bool>(false, false, "Role not found", HttpStatusCode.BadRequest);
 
 
             string hashedPassword = PasswordHasher.HashPassword(signUpRequest.Password);
@@ -75,17 +75,17 @@ namespace AmIAuthorised.Service
 
             _userRepository.Add(user);
             await _userRepository.SaveChangesAsync();
-            return new ApiResponse<bool>(true, true, "ResponseSaveSuccess", HttpStatusCode.Created);
+            return new ApiResponse<bool>(true, true, "Save success", HttpStatusCode.Created);
         }
 
         public async Task<ApiResponse<bool>> CreateRole(RoleUpsertDTO roleDTO)
         {
             if (string.IsNullOrWhiteSpace(roleDTO.RoleName) || roleDTO.PermissionIds == null || roleDTO.PermissionIds.Count <= default(int))
-                return new ApiResponse<bool>(false, false, "RoleNameCannotBeEmpty", HttpStatusCode.BadRequest);
+                return new ApiResponse<bool>(false, false, "Invalid role", HttpStatusCode.BadRequest);
 
             Role? isRoleExist = await _userRepository.GetRoleByName(roleDTO.RoleName);
             if (isRoleExist != null)
-                return new ApiResponse<bool>(false, false, "ErrorAlreadyExistsWith", HttpStatusCode.Conflict);
+                return new ApiResponse<bool>(false, false, "Already exists", HttpStatusCode.Conflict);
 
             Role role = new()
             {
@@ -96,7 +96,7 @@ namespace AmIAuthorised.Service
             {
                 Permission? permission = await _userRepository.GetPermissionById(permissionId);
                 if (permission == null)
-                    return new ApiResponse<bool>(false, false, "ErrorPermissionNotFound", HttpStatusCode.BadRequest);
+                    return new ApiResponse<bool>(false, false, "Permission not found", HttpStatusCode.BadRequest);
 
                 RolePermission rolePermission = new()
                 {
@@ -109,17 +109,17 @@ namespace AmIAuthorised.Service
 
             _userRepository.Add(role);
             await _userRepository.SaveChangesAsync();
-            return new ApiResponse<bool>(true, true, "ResponseSaveSuccess", HttpStatusCode.Created);
+            return new ApiResponse<bool>(true, true, "Save success", HttpStatusCode.Created);
         }
 
         public async Task<ApiResponse<bool>> CreatePermission(PermissionDTO permissionDTO)
         {
             if (string.IsNullOrWhiteSpace(permissionDTO.Code))
-                return new ApiResponse<bool>(false, false, "PermissionNameCannotBeEmpty", HttpStatusCode.BadRequest);
+                return new ApiResponse<bool>(false, false, "Invalid permission", HttpStatusCode.BadRequest);
 
             Permission? isPermissionExist = await _userRepository.GetPermissionByCode(permissionDTO.Code);
             if (isPermissionExist != null)
-                return new ApiResponse<bool>(false, false, "ErrorAlreadyExistsWith", HttpStatusCode.Conflict);
+                return new ApiResponse<bool>(false, false, "Already exists", HttpStatusCode.Conflict);
 
             Permission permission = new()
             {
@@ -129,7 +129,7 @@ namespace AmIAuthorised.Service
 
             _userRepository.Add(permission);
             await _userRepository.SaveChangesAsync();
-            return new ApiResponse<bool>(true, true, "ResponseSaveSuccess", HttpStatusCode.Created);
+            return new ApiResponse<bool>(true, true, "Save success", HttpStatusCode.Created);
         }
 
         public async Task<ApiResponse<List<UserDTO>>> GetUsers()
@@ -148,12 +148,12 @@ namespace AmIAuthorised.Service
                     Email = user.Email
                 });
             }
-            return new ApiResponse<List<UserDTO>>(userDtos, true, "RetriveSuccess", HttpStatusCode.OK);
+            return new ApiResponse<List<UserDTO>>(userDtos, true, "Retrive success", HttpStatusCode.OK);
         }
 
         public async Task<ApiResponse<List<Role>>> GetRoles()
         {
-            return new ApiResponse<List<Role>>(await _userRepository.GetRoles(), true, "RetriveSuccess", HttpStatusCode.OK);
+            return new ApiResponse<List<Role>>(await _userRepository.GetRoles(), true, "Retrive success", HttpStatusCode.OK);
         }
 
     }
