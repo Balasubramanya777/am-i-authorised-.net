@@ -29,7 +29,6 @@ namespace AmIAuthorised.Service
             SignInResponse response = new()
             {
                 AccessToken = token,
-                UserName = userDto.UserName,
                 Email = userDto.Email,
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName

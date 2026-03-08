@@ -42,12 +42,14 @@ namespace AmIAuthorised.Repository
         {
             return await (
               from u in _context.Users
+              join r in _context.Roles on u.RoleId equals r.RoleId
               join rp in _context.RolePermissions on u.RoleId equals rp.RoleId
               join p in _context.Permissions on rp.PermissionId equals p.PermissionId
               where u.UserName == userName
               group p by new
               {
                   u.UserId,
+                  r.RoleName,
                   u.UserName,
                   u.Password,
                   u.FirstName,
@@ -57,6 +59,7 @@ namespace AmIAuthorised.Repository
               select new UserDTO
               {
                   UserId = g.Key.UserId,
+                  Role = g.Key.RoleName,
                   UserName = g.Key.UserName,
                   Password = g.Key.Password,
                   FirstName = g.Key.FirstName,

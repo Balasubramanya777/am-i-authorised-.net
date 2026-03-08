@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AmIAuthorised.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("api/user")]
     [Authorize]
     public class UserController : ControllerBase
     {

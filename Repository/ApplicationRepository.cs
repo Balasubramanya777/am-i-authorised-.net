@@ -12,10 +12,11 @@ namespace AmIAuthorised.Repository
             _context = context;
         }
 
-        public async Task CreateApplication(Application application)
+        public async Task<Application> CreateApplication(Application application)
         {
             _context.Applications.Add(application);
             await _context.SaveChangesAsync();
+            return application;
         }
 
         public async Task UpdateApplication(Application application)

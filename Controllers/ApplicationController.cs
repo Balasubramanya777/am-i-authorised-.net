@@ -43,25 +43,34 @@ namespace AmIAuthorised.Controllers
 
         [Authorize(Policy = "APPLICATION_EDIT")]
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateApplicationName(long applicationId, string name)
+        public async Task<IActionResult> UpdateApplicationName(long applicationId, string applicationName)
         {
-            var response = await _applicationService.UpdateApplicationName(applicationId, name);
+            var response = await _applicationService.UpdateApplicationName(applicationId, applicationName);
             return response.ToActionResult();
         }
 
         [Authorize(Policy = "APPLICATION_SUBMIT")]
-        [HttpPost("submit")]
-        public async Task<IActionResult> ApplicationSubmit(long applicationId)
+        [HttpPost("{id}/submit")]
+        public async Task<IActionResult> ApplicationSubmit(long id)
         {
-            var response = await _applicationService.ApplicationStatusUnderReview(applicationId);
+            var response = await _applicationService.ApplicationStatusUnderReview(id);
+            return response.ToActionResult();
+        }
+
+        [Authorize(Policy = "APPLICATION_CREATE")]
+        [Authorize(Policy = "APPLICATION_SUBMIT")]
+        [HttpPost("/submit")]
+        public async Task<IActionResult> ApplicationCreateAndSubmit(string applicationName)
+        {
+            var response = await _applicationService.ApplicationCreateAndSubmit(applicationName);
             return response.ToActionResult();
         }
 
         [Authorize(Policy = "APPLICATION_ACTION")]
         [HttpPost("action")]
-        public async Task<IActionResult> ApplicationAction(long applicationId, int status)
+        public async Task<IActionResult> ApplicationAction(long applicationId, int applicationStatus)
         {
-            var response = await _applicationService.ApplicationStatusAction(applicationId, status);
+            var response = await _applicationService.ApplicationStatusAction(applicationId, applicationStatus);
             return response.ToActionResult();
         }
     }
