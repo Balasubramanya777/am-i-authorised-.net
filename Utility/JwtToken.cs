@@ -40,7 +40,8 @@ namespace AmIAuthorised.Utility
             List<Claim> claims = new()
             {
                 new(JwtRegisteredClaimNames.Sub, userDto.UserId.ToString()),
-                new(JwtRegisteredClaimNames.Email, userDto.Email)
+                new(JwtRegisteredClaimNames.Email, userDto.Email),
+                new Claim(ClaimTypes.Role, userDto.Role)
             };
 
             foreach (var permission in userDto.Permissions)

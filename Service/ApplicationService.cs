@@ -1,7 +1,8 @@
-﻿using System.Net;
-using AmIAuthorised.DataAccessLayer.Entity;
+﻿using AmIAuthorised.DataAccessLayer.Entity;
 using AmIAuthorised.Repository;
 using AmIAuthorised.Utility;
+using System;
+using System.Net;
 
 namespace AmIAuthorised.Service
 {
@@ -16,11 +17,8 @@ namespace AmIAuthorised.Service
             _currentUser = currentUser;
         }
 
-        public async Task<ApiResponse<bool>> CreateApplication(string applicationName)
+        public async Task<Application> CreateApplicationHelper(string applicationName)
         {
-            if (string.IsNullOrWhiteSpace(applicationName))
-                return new ApiResponse<bool>(false, false, "Application name is required", HttpStatusCode.BadRequest);
-
             Application application = new()
             {
                 ApplicationNumber = KeyGenerator.GenerateKey(),
@@ -28,7 +26,15 @@ namespace AmIAuthorised.Service
                 ApplicationStatus = (int)ApplicationStatus.Draft,
                 CreatedBy = long.Parse(_currentUser.UserId!)
             };
-            await _applicationRepository.CreateApplication(application);
+            return await _applicationRepository.CreateApplication(application);
+        }
+
+        public async Task<ApiResponse<bool>> CreateApplication(string applicationName)
+        {
+            if (string.IsNullOrWhiteSpace(applicationName))
+                return new ApiResponse<bool>(false, false, "Application name is required", HttpStatusCode.BadRequest);
+
+            await CreateApplicationHelper(applicationName);
             return new ApiResponse<bool>(true, true, "Application created", HttpStatusCode.Created);
         }
 
@@ -81,5 +87,16 @@ namespace AmIAuthorised.Service
             return await UpdateApplicationStatus(applicationId, status);
         }
 
+
+        public async Task<ApiResponse<bool>> ApplicationCreateAndSubmit(string applicationName)
+        {
+            if (string.IsNullOrWhiteSpace(applicationName))
+                return new ApiResponse<bool>(false, false, "Application name is required", HttpStatusCode.BadRequest);
+
+            Application application = await CreateApplicationHelper(applicationName);
+            await UpdateApplicationStatus(application.ApplicationId, (int)ApplicationStatus.UnderReview);
+
+            return new ApiResponse<bool>(true, true, "Application created", HttpStatusCode.Created);
+        }
     }
 }
