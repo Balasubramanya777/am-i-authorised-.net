@@ -1,7 +1,8 @@
-﻿using AmIAuthorised.Service;
+﻿using AmIAuthorised.DataAccessLayer.DTO;
+using AmIAuthorised.Service;
+using AmIAuthorised.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using AmIAuthorised.Utility;
 
 namespace AmIAuthorised.Controllers
 {
@@ -43,9 +44,9 @@ namespace AmIAuthorised.Controllers
 
         [Authorize(Policy = "APPLICATION_EDIT")]
         [HttpPost("update")]
-        public async Task<IActionResult> UpdateApplicationName(long applicationId, string applicationName)
+        public async Task<IActionResult> UpdateApplicationName(ApplicationUpdate request)
         {
-            var response = await _applicationService.UpdateApplicationName(applicationId, applicationName);
+            var response = await _applicationService.UpdateApplicationName(request.ApplicationId, request.ApplicationName);
             return response.ToActionResult();
         }
 
@@ -68,9 +69,9 @@ namespace AmIAuthorised.Controllers
 
         [Authorize(Policy = "APPLICATION_ACTION")]
         [HttpPost("action")]
-        public async Task<IActionResult> ApplicationAction(long applicationId, int applicationStatus)
+        public async Task<IActionResult> ApplicationAction(ApplicationAction request)
         {
-            var response = await _applicationService.ApplicationStatusAction(applicationId, applicationStatus);
+            var response = await _applicationService.ApplicationStatusAction(request.ApplicationId, request.ApplicationStatus);
             return response.ToActionResult();
         }
     }
